@@ -1,6 +1,5 @@
 <template>
   <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
-    &lt;!-- 네비게이션 바 (대시보드와 동일) -->
     <nav class="bg-white dark:bg-gray-800 shadow-sm">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
@@ -52,7 +51,6 @@
               <BellIcon class="h-6 w-6" />
             </button>
 
-            &lt;!-- 프로필 드롭다운 -->
             <div class="ml-3 relative">
               <div>
                 <button
@@ -102,7 +100,6 @@
             </div>
           </div>
           <div class="-mr-2 flex items-center sm:hidden">
-            &lt;!-- 모바일 메뉴 버튼 -->
             <button
               @click="mobileMenuOpen = !mobileMenuOpen"
               type="button"
@@ -118,7 +115,6 @@
         </div>
       </div>
 
-      &lt;!-- 모바일 메뉴 -->
       <div v-if="mobileMenuOpen" class="sm:hidden" id="mobile-menu">
         <div class="pt-2 pb-3 space-y-1">
           <router-link
@@ -195,7 +191,6 @@
       </div>
     </nav>
 
-    &lt;!-- 메인 콘텐츠 -->
     <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
       <div class="px-4 sm:px-0 mb-6">
         <h1 class="text-2xl font-semibold text-gray-900 dark:text-white">
@@ -223,7 +218,6 @@
         </div>
         <div class="border-b border-gray-200 dark:border-gray-700">
           <dl>
-            &lt;!-- 다크 모드 설정 -->
             <div
               class="bg-gray-50 dark:bg-gray-700 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6"
             >
@@ -309,7 +303,6 @@
               </dd>
             </div>
 
-            &lt;!-- 언어 설정 -->
             <div
               class="bg-white dark:bg-gray-800 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6"
             >
@@ -331,7 +324,6 @@
               </dd>
             </div>
 
-            &lt;!-- 알림 설정 -->
             <div
               class="bg-gray-50 dark:bg-gray-700 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6"
             >
@@ -408,7 +400,6 @@
           </dl>
         </div>
 
-        &lt;!-- GitHub 연동 설정 -->
         <div
           class="px-4 py-5 sm:px-6 border-b border-gray-200 dark:border-gray-700"
         >
@@ -529,7 +520,6 @@
           </dl>
         </div>
 
-        &lt;!-- 계정 설정 -->
         <div
           class="px-4 py-5 sm:px-6 border-b border-gray-200 dark:border-gray-700"
         >
@@ -643,7 +633,6 @@
           </dl>
         </div>
 
-        &lt;!-- 설정 저장 버튼 -->
         <div class="px-4 py-3 bg-gray-50 dark:bg-gray-700 text-right sm:px-6">
           <button
             @click="saveSettings"
@@ -654,7 +643,6 @@
         </div>
       </div>
 
-      &lt;!-- 비밀번호 변경 모달 -->
       <div
         v-if="showChangePasswordModal"
         class="fixed z-10 inset-0 overflow-y-auto"
@@ -757,7 +745,6 @@
         </div>
       </div>
 
-      &lt;!-- 계정 삭제 모달 -->
       <div
         v-if="showDeleteAccountModal"
         class="fixed z-10 inset-0 overflow-y-auto"
