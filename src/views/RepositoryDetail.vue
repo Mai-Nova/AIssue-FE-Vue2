@@ -1,8 +1,203 @@
 <template>
   <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
-    <app-navbar active-page="repositories" />
+    &lt;!-- 네비게이션 바 (대시보드와 동일) -->
+    <nav class="bg-white dark:bg-gray-800 shadow-sm">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between h-16">
+          <div class="flex">
+            <div class="flex-shrink-0 flex items-center">
+              <router-link
+                to="/dashboard"
+                class="text-2xl font-bold text-gray-800 dark:text-white flex items-center"
+              >
+                <span class="text-emerald-500">AI</span>ssue
+                <span class="ml-2 text-emerald-500">
+                  <GitBranchIcon size="20" />
+                </span>
+              </router-link>
+            </div>
+            <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+              <router-link
+                to="/dashboard"
+                class="border-transparent text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200 hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+              >
+                대시보드
+              </router-link>
+              <router-link
+                to="/repositories"
+                class="border-emerald-500 text-gray-900 dark:text-white inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+              >
+                저장소
+              </router-link>
+              <router-link
+                to="/my-activity"
+                class="border-transparent text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200 hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+              >
+                나의 활동
+              </router-link>
+              <router-link
+                to="/guide-bot"
+                class="border-transparent text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200 hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+              >
+                개발 가이드 봇
+              </router-link>
+            </div>
+          </div>
+          <div class="hidden sm:ml-6 sm:flex sm:items-center">
+            <button
+              type="button"
+              class="bg-white dark:bg-gray-800 p-1 rounded-full text-gray-400 hover:text-gray-500 dark:hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
+            >
+              <span class="sr-only">알림 보기</span>
+              <BellIcon class="h-6 w-6" />
+            </button>
 
+            &lt;!-- 프로필 드롭다운 -->
+            <div class="ml-3 relative">
+              <div>
+                <button
+                  @click="profileDropdownOpen = !profileDropdownOpen"
+                  type="button"
+                  class="bg-white dark:bg-gray-800 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
+                  id="user-menu-button"
+                  aria-expanded="false"
+                  aria-haspopup="true"
+                >
+                  <span class="sr-only">프로필 메뉴 열기</span>
+                  <img
+                    class="h-8 w-8 rounded-full"
+                    src="https://avatars.githubusercontent.com/u/12345678?v=4"
+                    alt="사용자 프로필"
+                  />
+                </button>
+              </div>
+              <div
+                v-if="profileDropdownOpen"
+                class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white dark:bg-gray-700 ring-1 ring-black ring-opacity-5 focus:outline-none"
+                role="menu"
+                aria-orientation="vertical"
+                aria-labelledby="user-menu-button"
+                tabindex="-1"
+              >
+                <router-link
+                  to="/profile"
+                  class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
+                  role="menuitem"
+                  >프로필</router-link
+                >
+                <router-link
+                  to="/settings"
+                  class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
+                  role="menuitem"
+                  >설정</router-link
+                >
+                <button
+                  @click="logout"
+                  class="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
+                  role="menuitem"
+                >
+                  로그아웃
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="-mr-2 flex items-center sm:hidden">
+            &lt;!-- 모바일 메뉴 버튼 -->
+            <button
+              @click="mobileMenuOpen = !mobileMenuOpen"
+              type="button"
+              class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-emerald-500"
+              aria-controls="mobile-menu"
+              aria-expanded="false"
+            >
+              <span class="sr-only">메뉴 열기</span>
+              <MenuIcon v-if="!mobileMenuOpen" class="block h-6 w-6" />
+              <XIcon v-else class="block h-6 w-6" />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      &lt;!-- 모바일 메뉴 -->
+      <div v-if="mobileMenuOpen" class="sm:hidden" id="mobile-menu">
+        <div class="pt-2 pb-3 space-y-1">
+          <router-link
+            to="/dashboard"
+            class="border-transparent text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-300 block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
+          >
+            대시보드
+          </router-link>
+          <router-link
+            to="/repositories"
+            class="bg-emerald-50 dark:bg-emerald-900 border-emerald-500 text-emerald-700 dark:text-emerald-200 block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
+          >
+            저장소
+          </router-link>
+          <router-link
+            to="/my-activity"
+            class="border-transparent text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-300 block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
+          >
+            나의 활동
+          </router-link>
+          <router-link
+            to="/guide-bot"
+            class="border-transparent text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-300 block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
+          >
+            개발 가이드 봇
+          </router-link>
+        </div>
+        <div class="pt-4 pb-3 border-t border-gray-200 dark:border-gray-600">
+          <div class="flex items-center px-4">
+            <div class="flex-shrink-0">
+              <img
+                class="h-10 w-10 rounded-full"
+                src="https://avatars.githubusercontent.com/u/12345678?v=4"
+                alt="사용자 프로필"
+              />
+            </div>
+            <div class="ml-3">
+              <div class="text-base font-medium text-gray-800 dark:text-white">
+                김개발
+              </div>
+              <div class="text-sm font-medium text-gray-500 dark:text-gray-400">
+                dev@example.com
+              </div>
+            </div>
+            <button
+              type="button"
+              class="ml-auto flex-shrink-0 bg-white dark:bg-gray-800 p-1 rounded-full text-gray-400 hover:text-gray-500 dark:hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
+            >
+              <span class="sr-only">알림 보기</span>
+              <BellIcon class="h-6 w-6" />
+            </button>
+          </div>
+          <div class="mt-3 space-y-1">
+            <router-link
+              to="/profile"
+              class="block px-4 py-2 text-base font-medium text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+            >
+              프로필
+            </router-link>
+            <router-link
+              to="/settings"
+              class="block px-4 py-2 text-base font-medium text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+            >
+              설정
+            </router-link>
+            <button
+              @click="logout"
+              class="block w-full text-left px-4 py-2 text-base font-medium text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
+            >
+              로그아웃
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    &lt;!-- 메인 콘텐츠 -->
     <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+      &lt;!-- 저장소 헤더 -->
       <div class="px-4 sm:px-0 mb-6">
         <div
           class="flex flex-col sm:flex-row sm:items-center sm:justify-between"
@@ -65,6 +260,7 @@
         </div>
       </div>
 
+      &lt;!-- 저장소 분석 탭 -->
       <div
         class="bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-md"
       >
@@ -106,8 +302,10 @@
           </nav>
         </div>
 
+        &lt;!-- 개요 탭 -->
         <div v-if="activeTab === 'overview'" class="p-4 sm:p-6">
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            &lt;!-- README 요약 -->
             <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 sm:p-6">
               <h3
                 class="text-lg font-medium text-gray-900 dark:text-white mb-4 flex items-center"
@@ -131,6 +329,7 @@
               </div>
             </div>
 
+            &lt;!-- 주요 기술 스택 -->
             <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4 sm:p-6">
               <h3
                 class="text-lg font-medium text-gray-900 dark:text-white mb-4 flex items-center"
@@ -149,6 +348,7 @@
               </div>
             </div>
 
+            &lt;!-- 최근 중요 이슈 -->
             <div
               class="lg:col-span-2 bg-gray-50 dark:bg-gray-700 rounded-lg p-4 sm:p-6"
             >
@@ -224,6 +424,7 @@
           </div>
         </div>
 
+        &lt;!-- 이슈 분석 탭 -->
         <div v-if="activeTab === 'issues'" class="p-4 sm:p-6">
           <div
             class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between"
@@ -343,6 +544,7 @@
           </div>
         </div>
 
+        &lt;!-- 코드 컨벤션 탭 -->
         <div v-if="activeTab === 'convention'" class="p-4 sm:p-6">
           <div
             class="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between"
@@ -386,7 +588,7 @@
               </div>
             </div>
             <div v-else class="text-center py-8">
-              <FileTextIcon class="mx-auto h-12 w-12 text-gray-400" />
+              <BookIcon class="mx-auto h-12 w-12 text-gray-400" />
               <h3
                 class="mt-2 text-sm font-medium text-gray-900 dark:text-white"
               >
@@ -416,23 +618,27 @@
 <script setup>
 import { ref, computed } from 'vue';
 import {
-  SearchIcon,
-  StarIcon,
-  GitForkIcon,
-  EyeIcon,
-  FileTextIcon,
-  LayersIcon,
-  AlertCircleIcon,
-  UserIcon,
-  ClockIcon,
-  ExternalLinkIcon,
-  BookOpenIcon,
-  MessageSquareIcon,
-  GitBranchIcon,
-} from '../utils/icons';
-import AppNavbar from '../components/AppNavbar.vue';
-import { getRepositoryById, getIssuesByRepositoryId } from '../utils/mockData';
+  Menu as MenuIcon,
+  X as XIcon,
+  Bell as BellIcon,
+  Search as SearchIcon,
+  Star as StarIcon,
+  GitFork as GitForkIcon,
+  Eye as EyeIcon,
+  FileText as FileTextIcon,
+  Layers as LayersIcon,
+  AlertCircle as AlertCircleIcon,
+  User as UserIcon,
+  Clock as ClockIcon,
+  ExternalLink as ExternalLinkIcon,
+  BookOpen as BookOpenIcon,
+  MessageSquare as MessageSquareIcon,
+  Book as BookIcon,
+  GitBranch as GitBranchIcon,
+} from 'lucide-vue-next';
 
+const mobileMenuOpen = ref(false);
+const profileDropdownOpen = ref(false);
 const activeTab = ref('overview');
 const issueStatusFilter = ref('all');
 const issueSearchQuery = ref('');
@@ -608,5 +814,9 @@ const getTagClass = (tag) => {
   }
 };
 
-// 이전에 있던 logout 함수는 이제 AppProfileDropdown 컴포넌트로 이동되었습니다.
+const logout = () => {
+  // 로그아웃 로직 구현
+  alert('로그아웃 기능이 구현될 예정입니다.');
+  profileDropdownOpen.value = false;
+};
 </script>

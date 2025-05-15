@@ -849,79 +849,102 @@
   </div>
 </template>
 
-<script>
-import { ref, reactive, onMounted } from 'vue';
-
-// 아이콘 임포트
+<script setup>
+import { ref } from 'vue';
 import {
-  MenuIcon,
-  XIcon,
-  BellIcon,
-  SearchIcon,
-  UserIcon,
-  SettingsIcon,
-  LogOutIcon,
-  GitBranchIcon,
-  ChevronDownIcon,
-  CheckIcon,
-  KeyIcon,
-  ShieldIcon,
-  BellOffIcon,
-  BellRingIcon,
-  GlobeIcon,
-  MoonIcon,
-  SunIcon,
-  EyeIcon,
-  EyeOffIcon,
-  SaveIcon,
-  AlignLeftIcon,
-  DownloadIcon,
-  TrashIcon,
-  ChevronRightIcon,
-} from '../utils/icons';
+  Menu as MenuIcon,
+  X as XIcon,
+  Bell as BellIcon,
+  Github as GithubIcon,
+  Download as DownloadIcon,
+  AlertTriangle as AlertTriangleIcon,
+  GitBranch as GitBranchIcon,
+} from 'lucide-vue-next';
 
-import AppNavbar from '../components/AppNavbar.vue';
-import AppMobileMenu from '../components/AppMobileMenu.vue';
-import AppProfileDropdown from '../components/AppProfileDropdown.vue';
-import AppFooter from '../components/AppFooter.vue';
-import AppLayout from '../components/AppLayout.vue';
-import AppPageTitle from '../components/AppPageTitle.vue';
-import AppCard from '../components/AppCard.vue';
-
-// 목업 데이터 임포트
-import { user, userSettings } from '../utils/mockData';
-
-// 목업 데이터로 설정값 초기화
-const darkMode = ref(userSettings.darkMode);
-const language = ref(userSettings.language);
-const emailNotifications = ref(userSettings.notifications.email);
-const browserNotifications = ref(userSettings.notifications.browser);
-const weeklyDigest = ref(userSettings.notifications.weeklyDigest);
-const readReposPermission = ref(userSettings.githubPermissions.readRepos);
-const writeIssuesPermission = ref(userSettings.githubPermissions.writeIssues);
-const writePRsPermission = ref(userSettings.githubPermissions.writePRs);
-const twoFactorAuthEnabled = ref(userSettings.twoFactorAuth);
-
-// 모달 상태 관리
+const mobileMenuOpen = ref(false);
+const profileDropdownOpen = ref(false);
 const showChangePasswordModal = ref(false);
 const showDeleteAccountModal = ref(false);
 
-// 프로필 드롭다운 상태 관리
-const profileDropdownOpen = ref(false);
-const mobileMenuOpen = ref(false);
+// 샘플 데이터 - 실제 구현에서는 API에서 가져옴
+const darkMode = ref('system'); // 'light', 'dark', 'system'
+const language = ref('ko');
+const notifications = ref({
+  email: true,
+  browser: true,
+  weeklyDigest: true,
+});
+const githubPermissions = ref({
+  readRepos: true,
+  writeIssues: true,
+  writePRs: false,
+});
+const twoFactorAuth = ref(false);
 
-// 비밀번호 변경 폼 데이터
-const passwordChange = reactive({
+// 비밀번호 변경 관련
+const passwordChange = ref({
   current: '',
   new: '',
   confirm: '',
 });
 
-// 계정 삭제 확인 텍스트
+// 계정 삭제 관련
 const deleteConfirmText = ref('');
 
-onMounted(() => {
-  console.log('설정 페이지가 마운트되었습니다.');
-  console.log('사용자 설정:', userSettings);
-});
+// 로그아웃
+const logout = () => {
+  // 로그아웃 로직 구현
+  alert('로그아웃 기능이 구현될 예정입니다.');
+  profileDropdownOpen.value = false;
+};
+
+// GitHub 연결 해제
+const disconnectGitHub = () => {
+  // GitHub 연결 해제 로직 구현
+  if (
+    confirm(
+      'GitHub 연결을 해제하시겠습니까? 이 작업은 저장소 접근 권한을 제거합니다.'
+    )
+  ) {
+    alert('GitHub 연결이 해제되었습니다.');
+  }
+};
+
+// 설정 저장
+const saveSettings = () => {
+  // 설정 저장 로직 구현
+  alert('설정이 저장되었습니다.');
+};
+
+// 비밀번호 변경
+const changePassword = () => {
+  // 비밀번호 변경 로직 구현
+  if (passwordChange.new !== passwordChange.confirm) {
+    alert('새 비밀번호와 확인 비밀번호가 일치하지 않습니다.');
+    return;
+  }
+
+  alert('비밀번호가 변경되었습니다.');
+  showChangePasswordModal.value = false;
+  passwordChange.value = {
+    current: '',
+    new: '',
+    confirm: '',
+  };
+};
+
+// 데이터 내보내기
+const exportData = () => {
+  // 데이터 내보내기 로직 구현
+  alert('데이터 내보내기가 시작되었습니다. 잠시 후 다운로드가 시작됩니다.');
+};
+
+// 계정 삭제
+const deleteAccount = () => {
+  // 계정 삭제 로직 구현
+  alert('계정이 삭제되었습니다. 로그아웃됩니다.');
+  showDeleteAccountModal.value = false;
+  deleteConfirmText.value = '';
+  // 로그아웃 및 홈페이지로 리디렉션
+};
 </script>

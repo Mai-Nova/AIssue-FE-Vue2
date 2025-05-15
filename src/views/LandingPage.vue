@@ -480,12 +480,9 @@ const loginWithGitHub = () => {
   // 예시:
   // window.location.href = `https://github.com/login/oauth/authorize?client_id=${YOUR_GITHUB_CLIENT_ID}&redirect_uri=${YOUR_REDIRECT_URI}&scope=user,repo`;
 
-  // 리디렉션 중...
+  // 데모 목적으로 메시지만 출력합니다
   console.log('GitHub OAuth로 리디렉션 중...');
-
-  // 실제 구현에서는 GitHub OAuth로 리디렉션합니다
-  // 지금은 다른 dashboard로 이동합니다
-  window.location.href = '/dashboard';
+  alert('실제 구현에서는 GitHub OAuth로 리디렉션됩니다');
 };
 </script>
 

@@ -59,7 +59,7 @@
                   @click="profileDropdownOpen = !profileDropdownOpen"
                   type="button"
                   class="bg-white dark:bg-gray-800 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
-                  id="user-menu-button"
+                  id="user-menu-button\"
                   aria-expanded="false"
                   aria-haspopup="true"
                 >
@@ -528,52 +528,112 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { ref } from 'vue';
-
-// 아이콘 임포트
 import {
-  MenuIcon,
-  XIcon,
-  BellIcon,
-  SearchIcon,
-  StarIcon,
-  GitForkIcon,
-  ClockIcon,
-  UserPlusIcon,
-  ChevronDownIcon,
-  LogOutIcon,
-  SettingsIcon,
-  UserIcon,
-  GitBranchIcon,
-  AlertCircleIcon,
-  MessageSquareIcon,
-  BarChart2Icon,
-  CodeIcon,
-  EyeIcon,
-  GitPullRequestIcon,
-  CodeXIcon,
-} from '../utils/icons';
-
-import AppNavbar from '../components/AppNavbar.vue';
-import AppMobileMenu from '../components/AppMobileMenu.vue';
-import AppProfileDropdown from '../components/AppProfileDropdown.vue';
-import AppFooter from '../components/AppFooter.vue';
-import AppLayout from '../components/AppLayout.vue';
-import AppPageTitle from '../components/AppPageTitle.vue';
-import AppCard from '../components/AppCard.vue';
-
-// 목업 데이터 임포트
-import {
-  activitySummary,
-  recentActivities,
-  contributedRepositories,
-  techStackStats,
-} from '../utils/mockData';
+  Menu as MenuIcon,
+  X as XIcon,
+  Bell as BellIcon,
+  GitPullRequest as GitPullRequestIcon,
+  MessageSquare as MessageSquareIcon,
+  CheckSquare as CheckSquareIcon,
+  Star as StarIcon,
+  Github as GithubIcon,
+  Clock as ClockIcon,
+  Eye as EyeIcon,
+  GitBranch as GitBranchIcon,
+} from 'lucide-vue-next';
 
 const mobileMenuOpen = ref(false);
 const profileDropdownOpen = ref(false);
 const timeRange = ref('month');
+
+// 활동 요약 데이터
+const activitySummary = ref({
+  pullRequests: 12,
+  comments: 47,
+  solvedIssues: 8,
+  stars: 23,
+});
+
+// 최근 활동 데이터
+const recentActivities = ref([
+  {
+    id: 1,
+    type: 'pullRequest',
+    title: 'React 컴포넌트 성능 최적화 PR',
+    status: '병합됨',
+    repository: 'frontend-project/react-app',
+    date: '3일 전',
+  },
+  {
+    id: 2,
+    type: 'comment',
+    title: 'API 응답 캐싱 구현 이슈에 코멘트',
+    status: '활성',
+    repository: 'backend-service/api',
+    date: '5일 전',
+  },
+  {
+    id: 3,
+    type: 'issue',
+    title: '모바일 뷰 반응형 디자인 개선 이슈 해결',
+    status: '완료됨',
+    repository: 'ui-components/design-system',
+    date: '1주일 전',
+  },
+  {
+    id: 4,
+    type: 'star',
+    title: '인증 및 권한 관리 서비스 저장소에 별 추가',
+    status: '활성',
+    repository: 'auth-service/login-flow',
+    date: '2주일 전',
+  },
+  {
+    id: 5,
+    type: 'pullRequest',
+    title: '로그인 인증 흐름 버그 수정 PR',
+    status: '병합됨',
+    repository: 'auth-service/login-flow',
+    date: '3주일 전',
+  },
+]);
+
+// 기여 저장소 데이터
+const contributedRepositories = ref([
+  {
+    id: '1',
+    name: 'frontend-project/react-app',
+    contributions: 15,
+    pullRequests: 5,
+    comments: 23,
+  },
+  {
+    id: '2',
+    name: 'backend-service/api',
+    contributions: 8,
+    pullRequests: 3,
+    comments: 12,
+  },
+  {
+    id: '3',
+    name: 'ui-components/design-system',
+    contributions: 12,
+    pullRequests: 4,
+    comments: 18,
+  },
+]);
+
+// 기술 스택 통계 데이터
+const techStackStats = ref([
+  { name: 'React', percentage: 45 },
+  { name: 'JavaScript', percentage: 65 },
+  { name: 'TypeScript', percentage: 35 },
+  { name: 'Node.js', percentage: 30 },
+  { name: 'CSS', percentage: 25 },
+  { name: 'HTML', percentage: 20 },
+]);
 
 // 활동 타입에 따른 아이콘 반환
 const getActivityIcon = (type) => {
@@ -587,27 +647,7 @@ const getActivityIcon = (type) => {
     case 'star':
       return StarIcon;
     default:
-      return GitBranchIcon;
+      return null;
   }
-};
-
-// 활동 상태에 따른 클래스 반환
-const getActivityStatusClass = (status) => {
-  switch (status) {
-    case '병합됨':
-      return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
-    case '활성':
-      return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200';
-    case '완료됨':
-      return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200';
-    default:
-      return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200';
-  }
-};
-
-const logout = () => {
-  // 로그아웃 로직 구현
-  alert('로그아웃 기능이 구현될 예정입니다.');
-  profileDropdownOpen.value = false;
 };
 </script>

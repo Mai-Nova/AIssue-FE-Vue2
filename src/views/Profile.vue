@@ -610,7 +610,7 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue';
+import { ref } from 'vue';
 import {
   Menu as MenuIcon,
   X as XIcon,
@@ -623,106 +623,11 @@ import {
   Database as DatabaseIcon,
   GitBranch as GitBranchIcon,
 } from 'lucide-vue-next';
-import { useRouter } from 'vue-router';
-
-// 목업 데이터 임포트
-import { user, userTechStack, repositories } from '../utils/mockData';
 
 const mobileMenuOpen = ref(false);
 const profileDropdownOpen = ref(false);
 const showAddTechModal = ref(false);
 const showEditProfileModal = ref(false);
 
-const router = useRouter();
-
-// 사용자 정보
-const userProfile = reactive({ name: '김개발', email: 'dev@example.com' });
-const editedProfile = reactive({ ...userProfile });
-
-// 기술 스택
-const techStack = ref([
-  { name: 'Vue', description: 'Vue.js 프레임워크', experience: '중급자' },
-  { name: 'Node.js', description: '서버 개발', experience: '전문가' },
-]);
-const newTech = reactive({ name: '', description: '', experience: '초보자' });
-
-// 프로필 편집
-function editProfile() {
-  editedProfile.name = userProfile.name;
-  editedProfile.email = userProfile.email;
-  showEditProfileModal.value = true;
-}
-function saveProfile() {
-  userProfile.name = editedProfile.name;
-  userProfile.email = editedProfile.email;
-  showEditProfileModal.value = false;
-}
-
-// 로그아웃 및 GitHub 연동 해제
-function logout() {
-  router.push('/');
-}
-function disconnectGitHub() {
-  alert('GitHub 연동이 해제되었습니다.');
-}
-
-// 기술 스택 관리
-function addTech() {
-  if (newTech.name && newTech.experience) {
-    techStack.value.push({ ...newTech });
-    newTech.name = '';
-    newTech.description = '';
-    newTech.experience = '초보자';
-    showAddTechModal.value = false;
-  }
-}
-function removeTech(index) {
-  techStack.value.splice(index, 1);
-}
-
-// 스타일 및 아이콘 매핑
-function getTechBgColor(name) {
-  switch (name) {
-    case 'React':
-      return 'bg-blue-500';
-    case 'Vue':
-      return 'bg-green-500';
-    case 'Angular':
-      return 'bg-red-500';
-    case 'Node.js':
-      return 'bg-green-600';
-    case 'Python':
-      return 'bg-yellow-400';
-    case 'Java':
-      return 'bg-red-600';
-    case 'TypeScript':
-      return 'bg-blue-600';
-    case 'GraphQL':
-      return 'bg-pink-500';
-    default:
-      return 'bg-gray-500';
-  }
-}
-function getTechIcon(name) {
-  switch (name) {
-    case 'Node.js':
-      return ServerIcon;
-    case 'Java':
-      return DatabaseIcon;
-    default:
-      return CodeIcon;
-  }
-}
-function getExperienceBadgeClass(exp) {
-  switch (exp) {
-    case '초보자':
-      return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200';
-    case '중급자':
-      return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200';
-    case '전문가':
-      return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
-    default:
-      return '';
-  }
-}
+// 샘플 데이터 - 실제 구현에서는 API에서 가져옴
 </script>
