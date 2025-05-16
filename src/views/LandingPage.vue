@@ -457,6 +457,7 @@
 
 <script setup>
 import { ref } from 'vue';
+import { useRouter } from 'vue-router'; // useRouter 임포트
 import {
   Github as GithubIcon,
   Menu as MenuIcon,
@@ -474,14 +475,17 @@ import {
 } from 'lucide-vue-next';
 
 const mobileMenuOpen = ref(false);
+const router = useRouter(); // router 인스턴스 사용
 
 const loginWithGitHub = () => {
-  // 실제 구현에서는 GitHub OAuth로 리디렉션합니다
-  // 예시:
-  // window.location.href = `https://github.com/login/oauth/authorize?client_id=${YOUR_GITHUB_CLIENT_ID}&redirect_uri=${YOUR_REDIRECT_URI}&scope=user,repo`;
+  // 데모 목적으로 localStorage에 임시 토큰 설정
+  localStorage.setItem('auth_token', 'demo_token_landing');
+  // /dashboard로 라우팅
+  router.push('/dashboard');
 
-  // 인증 없이 dashboard로 이동
-  window.location.href = '/dashboard';
+  // 기존 GitHub OAuth 로직은 주석 처리 또는 제거
+  // console.log('GitHub OAuth로 리디렉션 중...');
+  // alert('실제 구현에서는 GitHub OAuth로 리디렉션됩니다');
 };
 </script>
 

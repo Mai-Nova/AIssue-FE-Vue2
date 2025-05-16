@@ -1,653 +1,292 @@
 <template>
   <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
-    <!-- 네비게이션 바 (Dashboard와 동일) -->
-    <nav class="bg-white dark:bg-gray-800 shadow-sm">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
-          <div class="flex">
-            <div class="flex-shrink-0 flex items-center">
-              <router-link
-                to="/dashboard"
-                class="text-2xl font-bold text-gray-800 dark:text-white flex items-center"
-              >
-                <span class="text-emerald-500">AI</span>ssue
-                <span class="ml-2 text-emerald-500">
-                  <GitBranchIcon size="20" />
-                </span>
-              </router-link>
-            </div>
-            <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
-              <router-link
-                to="/dashboard"
-                class="border-transparent text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200 hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-              >
-                대시보드
-              </router-link>
-              <router-link
-                to="/repositories"
-                class="border-transparent text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200 hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-              >
-                저장소
-              </router-link>
-              <router-link
-                to="/my-activity"
-                class="border-emerald-500 text-gray-900 dark:text-white inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-              >
-                나의 활동
-              </router-link>
-              <router-link
-                to="/guide-bot"
-                class="border-transparent text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200 hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-              >
-                개발 가이드 봇
-              </router-link>
-            </div>
-          </div>
-          <!-- 프로필 드롭다운 등 (Dashboard와 동일) -->
-          <div class="hidden sm:ml-6 sm:flex sm:items-center">
-            <button
-              type="button"
-              class="bg-white dark:bg-gray-800 p-1 rounded-full text-gray-400 hover:text-gray-500 dark:hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
-            >
-              <span class="sr-only">알림 보기</span>
-              <BellIcon class="h-6 w-6" />
-            </button>
+    <AppLayout>
+      <div class="p-6">
+        <h1 class="text-2xl font-bold text-gray-800 dark:text-white mb-6">
+          나의 활동
+        </h1>
 
-            <div class="ml-3 relative">
-              <div>
-                <button
-                  @click="profileDropdownOpen = !profileDropdownOpen"
-                  type="button"
-                  class="bg-white dark:bg-gray-800 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
-                  id="user-menu-button\"
-                  aria-expanded="false"
-                  aria-haspopup="true"
-                >
-                  <span class="sr-only">프로필 메뉴 열기</span>
-                  <img
-                    class="h-8 w-8 rounded-full"
-                    src="https://avatars.githubusercontent.com/u/12345678?v=4"
-                    alt="사용자 프로필"
-                  />
-                </button>
-              </div>
-              <div
-                v-if="profileDropdownOpen"
-                class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white dark:bg-gray-700 ring-1 ring-black ring-opacity-5 focus:outline-none"
-                role="menu"
-                aria-orientation="vertical"
-                aria-labelledby="user-menu-button"
-                tabindex="-1"
+        <!-- 활동 요약 -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 mb-6">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+              <h3
+                class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1"
               >
-                <router-link
-                  to="/profile"
-                  class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
-                  role="menuitem"
-                  >프로필</router-link
-                >
-                <router-link
-                  to="/settings"
-                  class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
-                  role="menuitem"
-                  >설정</router-link
-                >
-                <button
-                  @click="logout"
-                  class="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
-                  role="menuitem"
-                >
-                  로그아웃
-                </button>
+                총 해결 이슈
+              </h3>
+              <div class="text-2xl font-bold text-gray-800 dark:text-white">
+                {{ solvedIssues.length }}
               </div>
             </div>
-          </div>
-          <div class="-mr-2 flex items-center sm:hidden">
-            <!-- 모바일 메뉴 버튼 -->
-            <button
-              @click="mobileMenuOpen = !mobileMenuOpen"
-              type="button"
-              class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-emerald-500"
-              aria-controls="mobile-menu"
-              aria-expanded="false"
-            >
-              <span class="sr-only">메뉴 열기</span>
-              <MenuIcon v-if="!mobileMenuOpen" class="block h-6 w-6" />
-              <XIcon v-else class="block h-6 w-6" />
-            </button>
+            <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+              <h3
+                class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1"
+              >
+                총 획득 점수
+              </h3>
+              <div class="text-2xl font-bold text-emerald-500">
+                {{ totalPoints }}
+              </div>
+            </div>
+            <div class="bg-gray-50 dark:bg-gray-700 rounded-lg p-4">
+              <h3
+                class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1"
+              >
+                최근 활동
+              </h3>
+              <div class="text-2xl font-bold text-gray-800 dark:text-white">
+                {{ lastActivityDate }}
+              </div>
+            </div>
           </div>
         </div>
-      </div>
 
-      <!-- 모바일 메뉴 -->
-      <div v-if="mobileMenuOpen" class="sm:hidden" id="mobile-menu">
-        <div class="pt-2 pb-3 space-y-1">
-          <router-link
-            to="/dashboard"
-            class="border-transparent text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-300 block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
-          >
-            대시보드
-          </router-link>
-          <router-link
-            to="/repositories"
-            class="border-transparent text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-300 block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
-          >
-            저장소
-          </router-link>
-          <router-link
-            to="/my-activity"
-            class="bg-emerald-50 dark:bg-emerald-900 border-emerald-500 text-emerald-700 dark:text-emerald-200 block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
-          >
-            나의 활동
-          </router-link>
-          <router-link
-            to="/guide-bot"
-            class="border-transparent text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-300 block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
-          >
-            개발 가이드 봇
-          </router-link>
-        </div>
-        <!-- 모바일 프로필 메뉴 -->
-        <div class="pt-4 pb-3 border-t border-gray-200 dark:border-gray-600">
-          <div class="flex items-center px-4">
-            <div class="flex-shrink-0">
-              <img
-                class="h-10 w-10 rounded-full"
-                src="https://avatars.githubusercontent.com/u/12345678?v=4"
-                alt="사용자 프로필"
-              />
-            </div>
-            <div class="ml-3">
-              <div class="text-base font-medium text-gray-800 dark:text-white">
-                김개발
-              </div>
-              <div class="text-sm font-medium text-gray-500 dark:text-gray-400">
-                dev@example.com
-              </div>
-            </div>
-            <button
-              type="button"
-              class="ml-auto flex-shrink-0 bg-white dark:bg-gray-800 p-1 rounded-full text-gray-400 hover:text-gray-500 dark:hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
-            >
-              <span class="sr-only">알림 보기</span>
-              <BellIcon class="h-6 w-6" />
-            </button>
-          </div>
-          <div class="mt-3 space-y-1">
-            <router-link
-              to="/profile"
-              class="block px-4 py-2 text-base font-medium text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-            >
-              프로필
-            </router-link>
-            <router-link
-              to="/settings"
-              class="block px-4 py-2 text-base font-medium text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-            >
-              설정
-            </router-link>
-            <button
-              @click="logout"
-              class="block w-full text-left px-4 py-2 text-base font-medium text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700"
-            >
-              로그아웃
-            </button>
-          </div>
-        </div>
-      </div>
-    </nav>
+        <!-- 해결한 이슈 목록 -->
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="text-lg font-semibold text-gray-700 dark:text-gray-200">
+              해결한 이슈
+            </h2>
 
-    <!-- 메인 콘텐츠 -->
-    <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-      <div class="px-4 sm:px-0">
-        <div
-          class="flex flex-col md:flex-row md:items-center md:justify-between"
-        >
-          <div class="flex-1">
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
-              나의 활동
-            </h1>
-            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-              오픈소스 기여 활동 내역과 통계를 확인하세요.
-            </p>
-          </div>
-          <div class="mt-4 md:mt-0">
             <div class="flex space-x-3">
+              <div class="relative">
+                <input
+                  v-model="searchQuery"
+                  type="text"
+                  placeholder="이슈 검색..."
+                  class="w-full sm:w-64 pl-10 pr-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400"
+                />
+                <SearchIcon
+                  class="absolute left-3 top-2.5 text-gray-400"
+                  size="18"
+                />
+              </div>
+
               <select
-                v-model="timeRange"
-                class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm rounded-md dark:bg-gray-700 dark:text-white"
+                v-model="sortOption"
+                class="px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400"
               >
-                <option value="week">최근 1주일</option>
-                <option value="month">최근 1개월</option>
-                <option value="quarter">최근 3개월</option>
-                <option value="year">최근 1년</option>
-                <option value="all">전체 기간</option>
+                <option value="date-desc">최신순</option>
+                <option value="date-asc">오래된순</option>
+                <option value="points-desc">점수 높은순</option>
+                <option value="points-asc">점수 낮은순</option>
               </select>
             </div>
           </div>
-        </div>
 
-        <!-- 활동 요약 카드 -->
-        <div class="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          <div
-            class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg"
-          >
-            <div class="p-5">
-              <div class="flex items-center">
-                <div class="flex-shrink-0 bg-emerald-500 rounded-md p-3">
-                  <GitPullRequestIcon class="h-6 w-6 text-white" />
-                </div>
-                <div class="ml-5 w-0 flex-1">
-                  <dl>
-                    <dt
-                      class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate"
-                    >
-                      PR 생성
-                    </dt>
-                    <dd>
-                      <div
-                        class="text-lg font-medium text-gray-900 dark:text-white"
-                      >
-                        {{ activitySummary.pullRequests }}
-                      </div>
-                    </dd>
-                  </dl>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div
-            class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg"
-          >
-            <div class="p-5">
-              <div class="flex items-center">
-                <div class="flex-shrink-0 bg-blue-500 rounded-md p-3">
-                  <MessageSquareIcon class="h-6 w-6 text-white" />
-                </div>
-                <div class="ml-5 w-0 flex-1">
-                  <dl>
-                    <dt
-                      class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate"
-                    >
-                      코멘트
-                    </dt>
-                    <dd>
-                      <div
-                        class="text-lg font-medium text-gray-900 dark:text-white"
-                      >
-                        {{ activitySummary.comments }}
-                      </div>
-                    </dd>
-                  </dl>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div
-            class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg"
-          >
-            <div class="p-5">
-              <div class="flex items-center">
-                <div class="flex-shrink-0 bg-purple-500 rounded-md p-3">
-                  <CheckSquareIcon class="h-6 w-6 text-white" />
-                </div>
-                <div class="ml-5 w-0 flex-1">
-                  <dl>
-                    <dt
-                      class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate"
-                    >
-                      해결한 이슈
-                    </dt>
-                    <dd>
-                      <div
-                        class="text-lg font-medium text-gray-900 dark:text-white"
-                      >
-                        {{ activitySummary.solvedIssues }}
-                      </div>
-                    </dd>
-                  </dl>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div
-            class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg"
-          >
-            <div class="p-5">
-              <div class="flex items-center">
-                <div class="flex-shrink-0 bg-yellow-500 rounded-md p-3">
-                  <StarIcon class="h-6 w-6 text-white" />
-                </div>
-                <div class="ml-5 w-0 flex-1">
-                  <dl>
-                    <dt
-                      class="text-sm font-medium text-gray-500 dark:text-gray-400 truncate"
-                    >
-                      받은 별점
-                    </dt>
-                    <dd>
-                      <div
-                        class="text-lg font-medium text-gray-900 dark:text-white"
-                      >
-                        {{ activitySummary.stars }}
-                      </div>
-                    </dd>
-                  </dl>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 활동 그래프 -->
-        <div
-          class="mt-6 bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg"
-        >
-          <div class="px-4 py-5 sm:p-6">
-            <h3
-              class="text-lg leading-6 font-medium text-gray-900 dark:text-white"
-            >
-              활동 그래프
-            </h3>
+          <div v-if="filteredIssues.length > 0" class="space-y-4">
             <div
-              class="mt-4 h-64 bg-gray-100 dark:bg-gray-700 rounded-lg flex items-center justify-center"
+              v-for="(issue, index) in filteredIssues"
+              :key="index"
+              class="border border-gray-100 dark:border-gray-700 rounded-lg p-4 hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors"
             >
-              <p class="text-gray-500 dark:text-gray-400">
-                활동 그래프가 여기에 표시됩니다.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <!-- 최근 활동 -->
-        <div class="mt-6">
-          <h2 class="text-lg font-medium text-gray-900 dark:text-white">
-            최근 활동
-          </h2>
-          <div
-            class="mt-2 bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg"
-          >
-            <ul
-              role="list"
-              class="divide-y divide-gray-200 dark:divide-gray-700"
-            >
-              <li v-for="activity in recentActivities" :key="activity.id">
-                <div class="px-4 py-4 sm:px-6">
+              <div class="flex items-start">
+                <div class="mr-3 mt-1">
+                  <CheckCircleIcon size="18" class="text-emerald-500" />
+                </div>
+                <div class="flex-1">
                   <div class="flex items-center justify-between">
-                    <div class="flex items-center">
-                      <div class="flex-shrink-0">
-                        <component
-                          :is="getActivityIcon(activity.type)"
-                          class="h-5 w-5 text-gray-400 dark:text-gray-500"
-                        />
-                      </div>
-                      <p
-                        class="ml-2 text-sm font-medium text-emerald-600 dark:text-emerald-400"
-                      >
-                        {{ activity.title }}
-                      </p>
-                    </div>
-                    <div class="ml-2 flex-shrink-0 flex">
-                      <p
-                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
-                        :class="getActivityStatusClass(activity.status)"
-                      >
-                        {{ activity.status }}
-                      </p>
-                    </div>
-                  </div>
-                  <div class="mt-2 sm:flex sm:justify-between">
-                    <div class="sm:flex">
-                      <p
-                        class="flex items-center text-sm text-gray-500 dark:text-gray-400"
-                      >
-                        <GithubIcon
-                          class="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400 dark:text-gray-500"
-                        />
-                        {{ activity.repository }}
-                      </p>
-                    </div>
-                    <div
-                      class="mt-2 flex items-center text-sm text-gray-500 dark:text-gray-400 sm:mt-0"
+                    <router-link
+                      :to="`/issue/${issue.id}`"
+                      class="text-sm font-medium text-gray-800 dark:text-white hover:text-emerald-500 dark:hover:text-emerald-400"
                     >
-                      <ClockIcon
-                        class="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400 dark:text-gray-500"
-                      />
-                      <p>
-                        {{ activity.date }}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- 기여 저장소 -->
-        <div class="mt-6">
-          <h2 class="text-lg font-medium text-gray-900 dark:text-white">
-            기여 저장소
-          </h2>
-          <div
-            class="mt-2 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
-          >
-            <div
-              v-for="repo in contributedRepositories"
-              :key="repo.id"
-              class="bg-white dark:bg-gray-800 overflow-hidden shadow rounded-lg"
-            >
-              <div class="px-4 py-5 sm:p-6">
-                <div class="flex items-center">
-                  <div class="flex-shrink-0">
-                    <div
-                      class="h-10 w-10 rounded-full bg-emerald-500 flex items-center justify-center text-white font-bold"
+                      {{ issue.title }}
+                    </router-link>
+                    <span class="text-sm font-medium text-emerald-500"
+                      >{{ issue.points }} 포인트</span
                     >
-                      {{ repo.name.charAt(0).toUpperCase() }}
-                    </div>
                   </div>
-                  <div class="ml-4">
-                    <h3
-                      class="text-lg font-medium text-gray-900 dark:text-white"
+                  <div class="flex items-center mt-1">
+                    <router-link
+                      :to="`/repository/${issue.repositoryId}`"
+                      class="text-xs text-gray-500 dark:text-gray-400 hover:text-emerald-500 dark:hover:text-emerald-400"
                     >
-                      {{ repo.name }}
-                    </h3>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">
-                      {{ repo.contributions }} 기여
-                    </p>
-                  </div>
-                </div>
-                <div class="mt-4">
-                  <div
-                    class="flex items-center text-sm text-gray-500 dark:text-gray-400"
-                  >
-                    <GitPullRequestIcon
-                      class="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400 dark:text-gray-500"
-                    />
-                    <span>PR {{ repo.pullRequests }}개</span>
-                    <span class="mx-2">•</span>
-                    <MessageSquareIcon
-                      class="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400 dark:text-gray-500"
-                    />
-                    <span>코멘트 {{ repo.comments }}개</span>
-                  </div>
-                </div>
-                <div class="mt-4">
-                  <router-link
-                    :to="`/repositories/${repo.id}`"
-                    class="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-md text-emerald-700 dark:text-emerald-300 bg-emerald-100 dark:bg-emerald-900 hover:bg-emerald-200 dark:hover:bg-emerald-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
-                  >
-                    <EyeIcon class="h-4 w-4 mr-1" />
-                    저장소 보기
-                  </router-link>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 기술 스택 통계 -->
-        <div class="mt-6">
-          <h2 class="text-lg font-medium text-gray-900 dark:text-white">
-            기술 스택 통계
-          </h2>
-          <div
-            class="mt-2 bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg"
-          >
-            <div class="px-4 py-5 sm:p-6">
-              <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                <div v-for="tech in techStackStats" :key="tech.name">
-                  <h3
-                    class="text-sm font-medium text-gray-700 dark:text-gray-300"
-                  >
-                    {{ tech.name }}
-                  </h3>
-                  <div class="mt-2 flex items-center">
-                    <div
-                      class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5"
+                      {{ issue.repositoryOwner }}/{{ issue.repositoryName }}
+                    </router-link>
+                    <span class="mx-2 text-gray-300 dark:text-gray-600">•</span>
+                    <span class="text-xs text-gray-500 dark:text-gray-400"
+                      >{{ issue.solvedDate }} 해결</span
                     >
-                      <div
-                        class="bg-emerald-600 h-2.5 rounded-full"
-                        :style="{ width: `${tech.percentage}%` }"
-                      ></div>
-                    </div>
+                  </div>
+                  <div class="flex mt-2 space-x-2">
                     <span
-                      class="ml-3 text-sm font-medium text-gray-700 dark:text-gray-300"
-                      >{{ tech.percentage }}%</span
+                      v-for="(tag, tagIndex) in issue.tags"
+                      :key="tagIndex"
+                      class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium"
+                      :class="getTagClass(tag.type)"
                     >
+                      {{ tag.name }}
+                    </span>
+                    <span
+                      class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium"
+                      :class="getDifficultyClass(issue.difficulty)"
+                    >
+                      {{ issue.difficulty }}
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
+          </div>
+
+          <div v-else class="text-center py-8">
+            <CheckCircleIcon
+              size="40"
+              class="text-gray-300 dark:text-gray-600 mx-auto mb-3"
+            />
+            <p class="text-gray-500 dark:text-gray-400">
+              아직 해결한 이슈가 없습니다.
+            </p>
+            <router-link
+              to="/repositories"
+              class="mt-3 inline-block text-sm text-emerald-500 hover:text-emerald-600 dark:hover:text-emerald-400"
+            >
+              저장소 탐색하기
+            </router-link>
           </div>
         </div>
       </div>
-    </main>
+    </AppLayout>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import {
-  Menu as MenuIcon,
-  X as XIcon,
-  Bell as BellIcon,
-  GitPullRequest as GitPullRequestIcon,
-  MessageSquare as MessageSquareIcon,
-  CheckSquare as CheckSquareIcon,
-  Star as StarIcon,
-  Github as GithubIcon,
-  Clock as ClockIcon,
-  Eye as EyeIcon,
-  GitBranch as GitBranchIcon,
+  Search as SearchIcon,
+  CheckCircle as CheckCircleIcon,
 } from 'lucide-vue-next';
+import applayout from '../components/AppLayout.vue';
 
-const mobileMenuOpen = ref(false);
-const profileDropdownOpen = ref(false);
-const timeRange = ref('month');
+// 상태 변수
+const searchQuery = ref('');
+const sortOption = ref('date-desc');
 
-// 활동 요약 데이터
-const activitySummary = ref({
-  pullRequests: 12,
-  comments: 47,
-  solvedIssues: 8,
-  stars: 23,
+// 해결한 이슈 목록 (실제 구현에서는 API에서 가져옵니다)
+const solvedIssues = ref([
+  {
+    id: '401',
+    title: '사용자 프로필 이미지 업로드 기능 구현',
+    repositoryId: '201',
+    repositoryName: 'next.js',
+    repositoryOwner: 'vercel',
+    solvedDate: '2025-05-14',
+    points: 120,
+    tags: [
+      { name: 'React', type: 'tech' },
+      { name: '기능 개발', type: 'category' },
+    ],
+    difficulty: '중간',
+  },
+  {
+    id: '402',
+    title: 'API 응답 캐싱 로직 개선',
+    repositoryId: '202',
+    repositoryName: 'tailwindcss',
+    repositoryOwner: 'tailwindlabs',
+    solvedDate: '2025-05-10',
+    points: 85,
+    tags: [
+      { name: 'JavaScript', type: 'tech' },
+      { name: '성능', type: 'category' },
+    ],
+    difficulty: '낮음',
+  },
+  {
+    id: '403',
+    title: '다크 모드 전환 시 깜빡임 현상 수정',
+    repositoryId: '202',
+    repositoryName: 'tailwindcss',
+    repositoryOwner: 'tailwindlabs',
+    solvedDate: '2025-05-05',
+    points: 150,
+    tags: [
+      { name: 'CSS', type: 'tech' },
+      { name: '버그', type: 'category' },
+    ],
+    difficulty: '높음',
+  },
+]);
+
+// 필터링 및 정렬된 이슈 목록
+const filteredIssues = computed(() => {
+  // 검색어로 필터링
+  let filtered = solvedIssues.value;
+  if (searchQuery.value) {
+    const query = searchQuery.value.toLowerCase();
+    filtered = filtered.filter(
+      (issue) =>
+        issue.title.toLowerCase().includes(query) ||
+        issue.repositoryName.toLowerCase().includes(query) ||
+        issue.repositoryOwner.toLowerCase().includes(query)
+    );
+  }
+
+  // 정렬
+  return [...filtered].sort((a, b) => {
+    switch (sortOption.value) {
+      case 'date-desc':
+        return new Date(b.solvedDate) - new Date(a.solvedDate);
+      case 'date-asc':
+        return new Date(a.solvedDate) - new Date(b.solvedDate);
+      case 'points-desc':
+        return b.points - a.points;
+      case 'points-asc':
+        return a.points - b.points;
+      default:
+        return 0;
+    }
+  });
 });
 
-// 최근 활동 데이터
-const recentActivities = ref([
-  {
-    id: 1,
-    type: 'pullRequest',
-    title: 'React 컴포넌트 성능 최적화 PR',
-    status: '병합됨',
-    repository: 'frontend-project/react-app',
-    date: '3일 전',
-  },
-  {
-    id: 2,
-    type: 'comment',
-    title: 'API 응답 캐싱 구현 이슈에 코멘트',
-    status: '활성',
-    repository: 'backend-service/api',
-    date: '5일 전',
-  },
-  {
-    id: 3,
-    type: 'issue',
-    title: '모바일 뷰 반응형 디자인 개선 이슈 해결',
-    status: '완료됨',
-    repository: 'ui-components/design-system',
-    date: '1주일 전',
-  },
-  {
-    id: 4,
-    type: 'star',
-    title: '인증 및 권한 관리 서비스 저장소에 별 추가',
-    status: '활성',
-    repository: 'auth-service/login-flow',
-    date: '2주일 전',
-  },
-  {
-    id: 5,
-    type: 'pullRequest',
-    title: '로그인 인증 흐름 버그 수정 PR',
-    status: '병합됨',
-    repository: 'auth-service/login-flow',
-    date: '3주일 전',
-  },
-]);
+// 총 획득 점수
+const totalPoints = computed(() => {
+  return solvedIssues.value.reduce((total, issue) => total + issue.points, 0);
+});
 
-// 기여 저장소 데이터
-const contributedRepositories = ref([
-  {
-    id: '1',
-    name: 'frontend-project/react-app',
-    contributions: 15,
-    pullRequests: 5,
-    comments: 23,
-  },
-  {
-    id: '2',
-    name: 'backend-service/api',
-    contributions: 8,
-    pullRequests: 3,
-    comments: 12,
-  },
-  {
-    id: '3',
-    name: 'ui-components/design-system',
-    contributions: 12,
-    pullRequests: 4,
-    comments: 18,
-  },
-]);
+// 최근 활동 날짜
+const lastActivityDate = computed(() => {
+  if (solvedIssues.value.length === 0) return '없음';
 
-// 기술 스택 통계 데이터
-const techStackStats = ref([
-  { name: 'React', percentage: 45 },
-  { name: 'JavaScript', percentage: 65 },
-  { name: 'TypeScript', percentage: 35 },
-  { name: 'Node.js', percentage: 30 },
-  { name: 'CSS', percentage: 25 },
-  { name: 'HTML', percentage: 20 },
-]);
+  const dates = solvedIssues.value.map((issue) => new Date(issue.solvedDate));
+  const latestDate = new Date(Math.max(...dates));
 
-// 활동 타입에 따른 아이콘 반환
-const getActivityIcon = (type) => {
+  return latestDate.toLocaleDateString('ko-KR', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+});
+
+// 태그 유형에 따른 클래스 반환
+const getTagClass = (type) => {
   switch (type) {
-    case 'pullRequest':
-      return GitPullRequestIcon;
-    case 'comment':
-      return MessageSquareIcon;
-    case 'issue':
-      return CheckSquareIcon;
-    case 'star':
-      return StarIcon;
+    case 'tech':
+      return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200';
+    case 'category':
+      return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200';
     default:
-      return null;
+      return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200';
   }
 };
+
+// 난이도에 따른 클래스 반환
+const getDifficultyClass = (difficulty) => {
+  switch (difficulty) {
+    case '낮음':
+      return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
+    case '중간':
+      return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200';
+    case '높음':
+      return 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200';
+    default:
+      return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200';
+  }
+};
+
+onMounted(() => {
+  // 실제 구현에서는 API에서 데이터를 가져옵니다
+  console.log('나의 활동 컴포넌트가 마운트되었습니다.');
+});
 </script>

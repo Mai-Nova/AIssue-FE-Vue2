@@ -1,428 +1,477 @@
 <template>
   <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
-    <!-- 네비게이션 바 (Dashboard와 동일) -->
-    <nav class="bg-white dark:bg-gray-800 shadow-sm">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
-          <div class="flex">
-            <div class="flex-shrink-0 flex items-center">
-              <router-link to="/dashboard" class="text-2xl font-bold text-gray-800 dark:text-white flex items-center">
-                <span class="text-emerald-500">AI</span>ssue
-                <span class="ml-2 text-emerald-500">
-                  <GitBranchIcon size="20" />
-                </span>
-              </router-link>
-            </div>
-            <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
-              <router-link to="/dashboard" class="border-transparent text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200 hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                대시보드
-              </router-link>
-              <router-link to="/repositories" class="border-transparent text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200 hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                저장소
-              </router-link>
-              <router-link to="/my-activity" class="border-transparent text-gray-500 dark:text-gray-300 hover:text-gray-700 dark:hover:text-gray-200 hover:border-gray-300 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                나의 활동
-              </router-link>
-              <router-link to="/guide-bot" class="border-emerald-500 text-gray-900 dark:text-white inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                개발 가이드 봇
-              </router-link>
-            </div>
-          </div>
-          <!-- 프로필 드롭다운 등 (Dashboard와 동일) -->
-          <div class="hidden sm:ml-6 sm:flex sm:items-center">
-            <button type="button" class="bg-white dark:bg-gray-800 p-1 rounded-full text-gray-400 hover:text-gray-500 dark:hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
-              <span class="sr-only">알림 보기</span>
-              <BellIcon class="h-6 w-6" />
-            </button>
+    <AppLayout>
+      <div class="flex flex-col h-full">
+        <!-- 헤더 -->
+        <div class="p-6 border-b border-gray-100 dark:border-gray-700">
+          <div class="flex items-center justify-between">
+            <h1 class="text-2xl font-bold text-gray-800 dark:text-white">
+              개발 가이드 봇
+            </h1>
 
-            <div class="ml-3 relative">
-              <div>
-                <button @click="profileDropdownOpen = !profileDropdownOpen" type="button" class="bg-white dark:bg-gray-800 flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
-                  <span class="sr-only">프로필 메뉴 열기</span>
-                  <img class="h-8 w-8 rounded-full" src="https://avatars.githubusercontent.com/u/12345678?v=4" alt="사용자 프로필">
-                </button>
-              </div>
-              <div v-if="profileDropdownOpen" class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white dark:bg-gray-700 ring-1 ring-black ring-opacity-5 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-                <router-link to="/profile" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600" role="menuitem">프로필</router-link>
-                <router-link to="/settings" class="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600" role="menuitem">설정</router-link>
-                <button @click="logout" class="block w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600" role="menuitem">로그아웃</button>
-              </div>
-            </div>
-          </div>
-          <div class="-mr-2 flex items-center sm:hidden">
-            <!-- 모바일 메뉴 버튼 -->
-            <button @click="mobileMenuOpen = !mobileMenuOpen" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-emerald-500" aria-controls="mobile-menu" aria-expanded="false">
-              <span class="sr-only">메뉴 열기</span>
-              <MenuIcon v-if="!mobileMenuOpen" class="block h-6 w-6" />
-              <XIcon v-else class="block h-6 w-6" />
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- 모바일 메뉴 -->
-      <div v-if="mobileMenuOpen" class="sm:hidden" id="mobile-menu">
-        <div class="pt-2 pb-3 space-y-1">
-          <router-link to="/dashboard" class="border-transparent text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-300 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
-            대시보드
-          </router-link>
-          <router-link to="/repositories" class="border-transparent text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-300 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
-            저장소
-          </router-link>
-          <router-link to="/my-activity" class="border-transparent text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-300 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
-            나의 활동
-          </router-link>
-          <router-link to="/guide-bot" class="bg-emerald-50 dark:bg-emerald-900 border-emerald-500 text-emerald-700 dark:text-emerald-200 block pl-3 pr-4 py-2 border-l-4 text-base font-medium">
-            개발 가이드 봇
-          </router-link>
-        </div>
-        <!-- 모바일 프로필 메뉴 -->
-        <div class="pt-4 pb-3 border-t border-gray-200 dark:border-gray-600">
-          <div class="flex items-center px-4">
-            <div class="flex-shrink-0">
-              <img class="h-10 w-10 rounded-full" src="https://avatars.githubusercontent.com/u/12345678?v=4" alt="사용자 프로필">
-            </div>
-            <div class="ml-3">
-              <div class="text-base font-medium text-gray-800 dark:text-white">김개발</div>
-              <div class="text-sm font-medium text-gray-500 dark:text-gray-400">dev@example.com</div>
-            </div>
-            <button type="button" class="ml-auto flex-shrink-0 bg-white dark:bg-gray-800 p-1 rounded-full text-gray-400 hover:text-gray-500 dark:hover:text-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
-              <span class="sr-only">알림 보기</span>
-              <BellIcon class="h-6 w-6" />
-            </button>
-          </div>
-          <div class="mt-3 space-y-1">
-            <router-link to="/profile" class="block px-4 py-2 text-base font-medium text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
-              프로필
-            </router-link>
-            <router-link to="/settings" class="block px-4 py-2 text-base font-medium text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
-              설정
-            </router-link>
-            <button @click="logout" class="block w-full text-left px-4 py-2 text-base font-medium text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-700">
-              로그아웃
-            </button>
-          </div>
-        </div>
-      </div>
-    </nav>
-
-    <!-- 메인 콘텐츠 -->
-    <main class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-      <div class="px-4 sm:px-0">
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between">
-          <div class="flex-1">
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">개발 가이드 봇</h1>
-            <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-              AI 개발 가이드 봇에게 저장소와 이슈에 대한 질문을 하고 도움을 받으세요.
-            </p>
-          </div>
-        </div>
-
-        <!-- 저장소 선택 -->
-        <div class="mt-6 bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg">
-          <div class="px-4 py-5 sm:p-6">
-            <div class="flex flex-col md:flex-row md:items-center gap-4">
-              <div class="flex-1">
-                <label for="repository" class="block text-sm font-medium text-gray-700 dark:text-gray-300">저장소 선택</label>
-                <select id="repository" v-model="selectedRepository" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm rounded-md dark:bg-gray-700 dark:text-white">
-                  <option v-for="repo in repositories" :key="repo.id" :value="repo.id">{{ repo.name }}</option>
-                </select>
-              </div>
-              <div class="flex-1">
-                <label for="issue" class="block text-sm font-medium text-gray-700 dark:text-gray-300">이슈 선택 (선택사항)</label>
-                <select id="issue" v-model="selectedIssue" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm rounded-md dark:bg-gray-700 dark:text-white">
-                  <option value="">이슈 선택 안함</option>
-                  <option v-for="issue in issues" :key="issue.id" :value="issue.id">{{ issue.title }}</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 채팅 인터페이스 -->
-        <div class="mt-6 bg-white dark:bg-gray-800 shadow overflow-hidden sm:rounded-lg">
-          <div class="px-4 py-5 sm:p-6 flex flex-col h-[600px]">
-            <!-- 채팅 메시지 영역 -->
-            <div class="flex-1 overflow-y-auto mb-4 space-y-4" ref="chatContainer">
-              <div v-for="(message, index) in messages" :key="index" :class="message.sender === 'bot' ? 'flex' : 'flex justify-end'">
-                <div :class="[
-                  'max-w-[80%] rounded-lg px-4 py-2 text-sm',
-                  message.sender === 'bot' 
-                    ? 'bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200' 
-                    : 'bg-emerald-500 text-white'
-                ]">
-                  <div v-if="message.sender === 'bot' && index === 0" class="flex items-center mb-2">
-                    <div class="flex-shrink-0 bg-emerald-100 dark:bg-emerald-900 rounded-full p-1">
-                      <BotIcon class="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
-                    </div>
-                    <span class="ml-2 font-medium">개발 가이드 봇</span>
-                  </div>
-                  <div v-html="message.text"></div>
-                  <div v-if="message.code" class="mt-2 bg-gray-800 text-gray-200 p-3 rounded overflow-x-auto text-xs">
-                    <pre><code>{{ message.code }}</code></pre>
-                  </div>
-                </div>
-              </div>
-              <div v-if="isTyping" class="flex">
-                <div class="max-w-[80%] rounded-lg px-4 py-2 text-sm bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200">
-                  <div class="flex space-x-1">
-                    <div class="w-2 h-2 rounded-full bg-gray-400 dark:bg-gray-500 animate-bounce"></div>
-                    <div class="w-2 h-2 rounded-full bg-gray-400 dark:bg-gray-500 animate-bounce" style="animation-delay: 0.2s"></div>
-                    <div class="w-2 h-2 rounded-full bg-gray-400 dark:bg-gray-500 animate-bounce" style="animation-delay: 0.4s"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- 입력 영역 -->
-            <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
-              <form @submit.prevent="sendMessage" class="flex">
-                <input 
-                  type="text" 
-                  v-model="newMessage" 
-                  class="shadow-sm focus:ring-emerald-500 focus:border-emerald-500 block w-full sm:text-sm border-gray-300 dark:border-gray-600 rounded-md dark:bg-gray-700 dark:text-white" 
-                  placeholder="질문을 입력하세요..."
-                  :disabled="!selectedRepository"
+            <div class="flex items-center space-x-3">
+              <select
+                v-model="selectedRepository"
+                class="px-4 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400"
+              >
+                <option value="">저장소 선택 (선택사항)</option>
+                <option
+                  v-for="repo in repositories"
+                  :key="repo.id"
+                  :value="repo.id"
                 >
-                <button 
-                  type="submit" 
-                  class="ml-3 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500"
-                  :disabled="!selectedRepository || !newMessage.trim()"
-                >
-                  <SendIcon class="h-4 w-4" />
-                  <span class="ml-1">전송</span>
-                </button>
-              </form>
+                  {{ repo.owner }}/{{ repo.name }}
+                </option>
+              </select>
+
+              <button
+                @click="clearChat"
+                class="text-gray-500 dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+              >
+                <TrashIcon size="18" />
+              </button>
             </div>
           </div>
         </div>
 
-        <!-- 추천 질문 -->
-        <div class="mt-6">
-          <h2 class="text-lg font-medium text-gray-900 dark:text-white">추천 질문</h2>
-          <div class="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
-            <button 
-              v-for="question in suggestedQuestions" 
-              :key="question"
-              @click="useQuestion(question)"
-              class="text-left px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
+        <!-- 채팅 영역 -->
+        <div class="flex-1 overflow-y-auto p-6" ref="chatContainer">
+          <div class="max-w-3xl mx-auto space-y-6">
+            <!-- 시스템 메시지 -->
+            <div
+              class="bg-emerald-50 dark:bg-emerald-900/20 rounded-lg p-4 text-center"
             >
-              {{ question }}
-            </button>
+              <p class="text-sm text-emerald-600 dark:text-emerald-400">
+                <span v-if="selectedRepository">
+                  <strong>{{ getRepositoryName(selectedRepository) }}</strong>
+                  저장소의 코드 컨벤션과 개발 가이드에 대해 질문해보세요.
+                </span>
+                <span v-else>
+                  개발 가이드 봇에게 코드 컨벤션, 개발 방법론, 모범 사례 등에
+                  대해 질문해보세요.
+                </span>
+              </p>
+            </div>
+
+            <!-- 채팅 메시지 -->
+            <div
+              v-for="(message, index) in chatMessages"
+              :key="index"
+              :class="
+                message.role === 'user'
+                  ? 'flex justify-end'
+                  : 'flex justify-start'
+              "
+            >
+              <div
+                :class="[
+                  'max-w-[80%] rounded-lg p-4',
+                  message.role === 'user'
+                    ? 'bg-emerald-500 text-white'
+                    : 'bg-white dark:bg-gray-800 text-gray-800 dark:text-white border border-gray-100 dark:border-gray-700',
+                ]"
+              >
+                <div
+                  v-if="message.role === 'assistant'"
+                  class="flex items-center mb-2"
+                >
+                  <div
+                    class="w-6 h-6 bg-emerald-100 dark:bg-emerald-900 rounded-full flex items-center justify-center mr-2"
+                  >
+                    <BotIcon size="14" class="text-emerald-500" />
+                  </div>
+                  <span class="text-sm font-medium">개발 가이드 봇</span>
+                </div>
+                <div
+                  class="prose dark:prose-invert max-w-none"
+                  v-html="formatMessage(message.content)"
+                ></div>
+              </div>
+            </div>
+
+            <!-- 로딩 표시 -->
+            <div v-if="isLoading" class="flex justify-start">
+              <div
+                class="bg-white dark:bg-gray-800 rounded-lg p-4 border border-gray-100 dark:border-gray-700 flex items-center"
+              >
+                <div
+                  class="w-6 h-6 bg-emerald-100 dark:bg-emerald-900 rounded-full flex items-center justify-center mr-2"
+                >
+                  <BotIcon size="14" class="text-emerald-500" />
+                </div>
+                <div class="flex space-x-1">
+                  <div
+                    class="w-2 h-2 bg-emerald-500 rounded-full animate-bounce"
+                    style="animation-delay: 0s"
+                  ></div>
+                  <div
+                    class="w-2 h-2 bg-emerald-500 rounded-full animate-bounce"
+                    style="animation-delay: 0.2s"
+                  ></div>
+                  <div
+                    class="w-2 h-2 bg-emerald-500 rounded-full animate-bounce"
+                    style="animation-delay: 0.4s"
+                  ></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 입력 영역 -->
+        <div class="p-4 border-t border-gray-100 dark:border-gray-700">
+          <div class="max-w-3xl mx-auto">
+            <form @submit.prevent="sendMessage" class="flex space-x-2">
+              <input
+                v-model="userInput"
+                type="text"
+                placeholder="메시지를 입력하세요..."
+                class="flex-1 px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400"
+                :disabled="isLoading"
+              />
+              <button
+                type="submit"
+                class="px-4 py-3 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                :disabled="isLoading || !userInput.trim()"
+              >
+                <SendIcon size="18" />
+              </button>
+            </form>
           </div>
         </div>
       </div>
-    </main>
+    </AppLayout>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick, watch } from 'vue';
-import { useRoute } from 'vue-router';
-import { 
-  Menu as MenuIcon, 
-  X as XIcon, 
-  Bell as BellIcon,
-  Send as SendIcon,
+import { ref, computed, onMounted, nextTick, watch } from 'vue';
+import {
   Bot as BotIcon,
-  GitBranch as GitBranchIcon
+  Trash as TrashIcon,
+  Send as SendIcon,
 } from 'lucide-vue-next';
+import applayout from '../components/AppLayout.vue';
+import { marked } from 'marked';
 
-const route = useRoute();
-const mobileMenuOpen = ref(false);
-const profileDropdownOpen = ref(false);
+// 상태 변수
+const userInput = ref('');
+const chatMessages = ref([]);
+const isLoading = ref(false);
+const selectedRepository = ref('');
 const chatContainer = ref(null);
 
-// 저장소 및 이슈 데이터
+// 저장소 목록 (실제 구현에서는 API에서 가져옵니다)
 const repositories = ref([
-  { id: '1', name: 'frontend-project/react-app' },
-  { id: '2', name: 'backend-service/api' },
-  { id: '3', name: 'ui-components/design-system' },
-  { id: '4', name: 'auth-service/login-flow' }
+  {
+    id: '201',
+    name: 'next.js',
+    owner: 'vercel',
+  },
+  {
+    id: '202',
+    name: 'tailwindcss',
+    owner: 'tailwindlabs',
+  },
 ]);
 
-const issues = ref([
-  { id: '1', title: 'React 컴포넌트 성능 최적화' },
-  { id: '2', title: 'API 응답 캐싱 구현' },
-  { id: '3', title: '모바일 뷰 반응형 디자인 개선' }
-]);
+// 저장소 이름 가져오기
+const getRepositoryName = (repoId) => {
+  const repo = repositories.value.find((r) => r.id === repoId);
+  return repo ? `${repo.owner}/${repo.name}` : '';
+};
 
-// 채팅 관련 상태
-const selectedRepository = ref('');
-const selectedIssue = ref('');
-const messages = ref([]);
-const newMessage = ref('');
-const isTyping = ref(false);
-
-let initialIssue = null;
-
-// URL에서 이슈 ID를 가져와 초기화
-onMounted(() => {
-  if (route && route.query && route.query.issue) {
-    initialIssue = route.query.issue;
-    selectedIssue.value = initialIssue;
-    // 실제로는 이슈 ID로 저장소 ID를 찾아야 함
-    selectedRepository.value = '1';
-    
-    // 초기 메시지 설정
-    initializeChat();
-  } else {
-    // 기본 환영 메시지
-    messages.value = [
-      {
-        sender: 'bot',
-        text: '안녕하세요! 저는 AIssue의 개발 가이드 봇입니다. 저장소를 선택하고 질문해주세요. 코드 이해, 이슈 해결 방법, 기술 스택 등에 대해 도움을 드릴 수 있습니다.'
-      }
-    ];
-  }
-});
-
-// 저장소나 이슈가 변경되면 채팅 초기화
-watch([selectedRepository, selectedIssue], () => {
-  if (selectedRepository.value) {
-    initializeChat();
-  }
-});
-
-// 채팅 초기화
-function initializeChat() {
-  messages.value = [];
-  
-  // 저장소 정보 메시지
-  const repoName = repositories.value.find(r => r.id === selectedRepository.value)?.name || '';
-  let welcomeMessage = `<strong>${repoName}</strong> 저장소에 대해 질문해주세요.`;
-  
-  // 이슈가 선택된 경우 추가 정보
-  if (selectedIssue.value) {
-    const issueTitle = issues.value.find(i => i.id === selectedIssue.value)?.title || '';
-    welcomeMessage += `<br><br>현재 선택된 이슈: <strong>${issueTitle}</strong><br><br>이 이슈에 대한 질문이나 해결 방법에 대해 물어보세요.`;
-  }
-  
-  messages.value.push({
-    sender: 'bot',
-    text: welcomeMessage
-  });
-  
-  // 스크롤 조정
-  scrollToBottom();
-}
+// 메시지 포맷팅 (마크다운 지원)
+const formatMessage = (content) => {
+  return marked(content);
+};
 
 // 메시지 전송
-function sendMessage() {
-  if (!newMessage.value.trim() || !selectedRepository.value) return;
-  
+const sendMessage = async () => {
+  if (!userInput.value.trim() || isLoading.value) return;
+
   // 사용자 메시지 추가
-  messages.value.push({
-    sender: 'user',
-    text: newMessage.value
+  chatMessages.value.push({
+    role: 'user',
+    content: userInput.value,
   });
-  
-  // 입력창 초기화 및 스크롤
-  const userQuestion = newMessage.value;
-  newMessage.value = '';
+
+  // 입력창 초기화
+  const userMessage = userInput.value;
+  userInput.value = '';
+
+  // 스크롤 아래로 이동
+  await nextTick();
   scrollToBottom();
-  
-  // 봇 응답 시뮬레이션
-  isTyping.value = true;
-  setTimeout(() => {
-    isTyping.value = false;
-    
-    // 샘플 응답 (실제로는 AI 응답 로직 필요)
-    let botResponse = getBotResponse(userQuestion);
-    messages.value.push(botResponse);
-    
-    scrollToBottom();
-  }, 1500);
-}
 
-// 추천 질문 사용
-function useQuestion(question) {
-  newMessage.value = question;
-}
+  // 봇 응답 생성
+  isLoading.value = true;
 
-// 스크롤을 항상 아래로 유지
-function scrollToBottom() {
-  nextTick(() => {
-    if (chatContainer.value) {
-      chatContainer.value.scrollTop = chatContainer.value.scrollHeight;
+  try {
+    // 실제 구현에서는 API 호출이 필요합니다
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+
+    // 선택된 저장소에 따라 다른 응답 생성
+    let botResponse;
+    if (selectedRepository.value) {
+      const repoName = getRepositoryName(selectedRepository.value);
+      botResponse = generateRepositorySpecificResponse(userMessage, repoName);
+    } else {
+      botResponse = generateGenericResponse(userMessage);
     }
-  });
-}
 
-// 샘플 봇 응답 (실제로는 AI 응답 로직으로 대체)
-function getBotResponse(question) {
-  // 질문에 따른 샘플 응답
-  if (question.includes('성능') || question.includes('최적화')) {
-    return {
-      sender: 'bot',
-      text: 'React 컴포넌트 성능 최적화를 위한 몇 가지 방법을 알려드릴게요:',
-      code: `// 1. React.memo를 사용하여 불필요한 리렌더링 방지
-const MemoizedComponent = React.memo(function MyComponent(props) {
-  // 컴포넌트 로직
+    // 봇 메시지 추가
+    chatMessages.value.push({
+      role: 'assistant',
+      content: botResponse,
+    });
+
+    // 스크롤 아래로 이동
+    await nextTick();
+    scrollToBottom();
+  } catch (error) {
+    console.error('메시지 전송 중 오류 발생:', error);
+
+    // 오류 메시지 추가
+    chatMessages.value.push({
+      role: 'assistant',
+      content:
+        '죄송합니다. 응답을 생성하는 중에 오류가 발생했습니다. 다시 시도해주세요.',
+    });
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+// 채팅 초기화
+const clearChat = () => {
+  chatMessages.value = [];
+};
+
+// 스크롤을 아래로 이동
+const scrollToBottom = () => {
+  if (chatContainer.value) {
+    chatContainer.value.scrollTop = chatContainer.value.scrollHeight;
+  }
+};
+
+// 저장소별 응답 생성 (실제 구현에서는 AI 모델 호출이 필요합니다)
+const generateRepositorySpecificResponse = (message, repoName) => {
+  // 예시 응답 (실제 구현에서는 AI 모델 호출로 대체됩니다)
+  if (repoName === 'vercel/next.js') {
+    if (
+      message.toLowerCase().includes('코드 컨벤션') ||
+      message.toLowerCase().includes('스타일 가이드')
+    ) {
+      return `
+## Next.js 코드 컨벤션
+
+Next.js 프로젝트에서는 다음과 같은 코드 컨벤션을 따릅니다:
+
+1. **TypeScript 사용**: 모든 새로운 코드는 TypeScript로 작성되어야 합니다.
+2. **파일 명명 규칙**:
+   - 컴포넌트 파일: PascalCase (예: \`Button.tsx\`)
+   - 유틸리티 파일: camelCase (예: \`fetchData.ts\`)
+   - 페이지 파일: kebab-case (예: \`blog-post.tsx\`)
+3. **코드 포맷팅**: Prettier와 ESLint 설정을 준수해야 합니다.
+4. **커밋 메시지**: Conventional Commits 형식을 따라야 합니다.
+5. **테스트**: 모든 PR은 최소 하나의 테스트를 포함해야 합니다.
+
+자세한 내용은 [CONTRIBUTING.md](https://github.com/vercel/next.js/blob/canary/contributing.md) 파일을 참조하세요.
+      `;
+    } else if (
+      message.toLowerCase().includes('pr') ||
+      message.toLowerCase().includes('풀 리퀘스트')
+    ) {
+      return `
+## Next.js PR 가이드라인
+
+Next.js 프로젝트에 PR을 제출할 때 다음 사항을 고려하세요:
+
+1. **이슈 먼저 생성**: 기능 개발 전에 이슈를 먼저 생성하여 논의합니다.
+2. **브랜치 명명**: \`fix/issue-description\` 또는 \`feature/issue-description\` 형식을 사용합니다.
+3. **PR 설명**: 변경 사항, 관련 이슈, 테스트 방법을 명확히 설명합니다.
+4. **테스트**: 모든 PR은 관련 테스트를 포함해야 합니다.
+5. **CI 통과**: 모든 CI 검사가 통과해야 합니다.
+6. **리뷰**: 최소 한 명의 코어 팀원의 승인이 필요합니다.
+
+자세한 내용은 [CONTRIBUTING.md](https://github.com/vercel/next.js/blob/canary/contributing.md) 파일을 참조하세요.
+      `;
+    }
+  } else if (repoName === 'tailwindlabs/tailwindcss') {
+    if (
+      message.toLowerCase().includes('코드 컨벤션') ||
+      message.toLowerCase().includes('스타일 가이드')
+    ) {
+      return `
+## Tailwind CSS 코드 컨벤션
+
+Tailwind CSS 프로젝트에서는 다음과 같은 코드 컨벤션을 따릅니다:
+
+1. **JavaScript 스타일**: StandardJS 스타일 가이드를 따릅니다.
+2. **CSS 작성**: 새로운 유틸리티 클래스는 기존 패턴을 따라야 합니다.
+3. **문서화**: 모든 새로운 기능은 문서화되어야 합니다.
+4. **테스트**: 모든 변경 사항은 테스트를 포함해야 합니다.
+5. **커밋 메시지**: 명확하고 설명적인 커밋 메시지를 작성해야 합니다.
+
+자세한 내용은 [CONTRIBUTING.md](https://github.com/tailwindlabs/tailwindcss/blob/master/.github/CONTRIBUTING.md) 파일을 참조하세요.
+      `;
+    }
+  }
+
+  // 기본 응답
+  return `
+${repoName} 저장소에 대한 질문을 주셨군요. 제가 도울 수 있는 내용은 다음과 같습니다:
+
+- 코드 컨벤션 및 스타일 가이드
+- PR 및 이슈 제출 가이드라인
+- 개발 환경 설정
+- 테스트 작성 방법
+- 문서화 가이드라인
+
+더 구체적인 질문이 있으시면 알려주세요!
+  `;
+};
+
+// 일반 응답 생성 (실제 구현에서는 AI 모델 호출이 필요합니다)
+const generateGenericResponse = (message) => {
+  // 예시 응답 (실제 구현에서는 AI 모델 호출로 대체됩니다)
+  if (
+    message.toLowerCase().includes('코드 컨벤션') ||
+    message.toLowerCase().includes('스타일 가이드')
+  ) {
+    return `
+## 일반적인 코드 컨벤션 가이드
+
+효과적인 코드 컨벤션은 프로젝트의 가독성과 유지보수성을 높입니다. 다음은 일반적인 코드 컨벤션 가이드입니다:
+
+### JavaScript/TypeScript
+1. **일관된 명명 규칙 사용**:
+   - 변수와 함수: camelCase
+   - 클래스와 컴포넌트: PascalCase
+   - 상수: UPPER_SNAKE_CASE
+2. **의미 있는 이름 사용**: 변수와 함수 이름은 그 목적을 명확히 나타내야 합니다.
+3. **코드 포맷팅**: ESLint와 Prettier를 사용하여 일관된 코드 스타일을 유지합니다.
+4. **주석 작성**: 복잡한 로직에는 주석을 추가하되, 자명한 코드에는 불필요한 주석을 피합니다.
+
+### React/Vue
+1. **컴포넌트 구조화**: 논리적으로 관련된 코드를 함께 그룹화합니다.
+2. **Props 검증**: PropTypes 또는 TypeScript를 사용하여 props를 검증합니다.
+3. **상태 관리**: 상태 관리를 위한 일관된 패턴을 사용합니다.
+
+### Git
+1. **커밋 메시지**: 명확하고 설명적인 커밋 메시지를 작성합니다.
+2. **브랜치 전략**: 일관된 브랜치 전략(예: Git Flow, GitHub Flow)을 사용합니다.
+
+특정 언어나 프레임워크에 대한 더 자세한 가이드가 필요하시면 알려주세요!
+    `;
+  } else if (
+    message.toLowerCase().includes('테스트') ||
+    message.toLowerCase().includes('단위 테스트')
+  ) {
+    return `
+## 효과적인 테스트 작성 가이드
+
+좋은 테스트는 코드의 품질을 보장하고 리팩토링을 용이하게 합니다. 다음은 효과적인 테스트 작성을 위한 가이드입니다:
+
+### 테스트 원칙
+1. **FIRST 원칙**:
+   - Fast: 테스트는 빠르게 실행되어야 합니다.
+   - Independent: 각 테스트는 독립적이어야 합니다.
+   - Repeatable: 테스트는 어떤 환경에서도 동일한 결과를 내야 합니다.
+   - Self-validating: 테스트는 스스로 성공/실패를 판단할 수 있어야 합니다.
+   - Timely: 테스트는 프로덕션 코드 작성과 가까운 시간에 작성되어야 합니다.
+
+### 테스트 유형
+1. **단위 테스트**: 개별 함수나 컴포넌트의 동작을 테스트합니다.
+2. **통합 테스트**: 여러 컴포넌트나 모듈의 상호작용을 테스트합니다.
+3. **E2E 테스트**: 사용자 관점에서 전체 애플리케이션의 동작을 테스트합니다.
+
+### 테스트 도구
+- **JavaScript/TypeScript**: Jest, Mocha, Chai
+- **React**: React Testing Library, Enzyme
+- **Vue**: Vue Test Utils
+- **E2E**: Cypress, Playwright, Selenium
+
+특정 프레임워크나 도구에 대한 더 자세한 정보가 필요하시면 알려주세요!
+    `;
+  } else if (
+    message.toLowerCase().includes('git') ||
+    message.toLowerCase().includes('깃')
+  ) {
+    return `
+## Git 모범 사례 가이드
+
+효과적인 Git 사용은 팀 협업의 핵심입니다. 다음은 Git 사용에 관한 모범 사례입니다:
+
+### 커밋 메시지
+1. **구조화된 커밋 메시지**:
+   - 제목 줄: 50자 이내로 변경 사항 요약
+   - 빈 줄
+   - 본문: 변경 이유와 영향 설명
+2. **Conventional Commits**: \`feat:\`, \`fix:\`, \`docs:\`, \`style:\`, \`refactor:\` 등의 접두사 사용
+
+### 브랜치 전략
+1. **Git Flow**:
+   - \`main\`: 프로덕션 코드
+   - \`develop\`: 개발 중인 코드
+   - \`feature/*\`: 새로운 기능
+   - \`hotfix/*\`: 긴급 버그 수정
+2. **GitHub Flow**:
+   - \`main\` 브랜치에서 직접 \`feature/*\` 브랜치 생성
+   - PR을 통한 코드 리뷰 후 \`main\`에 병합
+
+### 기타 팁
+1. **자주 커밋하기**: 작은 단위로 자주 커밋하여 변경 사항을 추적하기 쉽게 합니다.
+2. **Pull 전에 Commit**: 로컬 변경 사항을 커밋한 후 pull 하여 충돌을 관리합니다.
+3. **Rebase vs Merge**: 상황에 따라 적절한 방법을 선택합니다.
+
+특정 Git 워크플로우나 명령어에 대해 더 알고 싶으시면 알려주세요!
+    `;
+  }
+
+  // 기본 응답
+  return `
+안녕하세요! 개발 가이드 봇입니다. 다음과 같은 주제에 대해 도움을 드릴 수 있습니다:
+
+- 코드 컨벤션 및 스타일 가이드
+- 테스트 작성 방법
+- Git 사용 모범 사례
+- 코드 리뷰 가이드라인
+- 문서화 모범 사례
+- 특정 언어/프레임워크 관련 가이드
+
+어떤 주제에 대해 알고 싶으신가요?
+  `;
+};
+
+// 저장소 선택 변경 시 안내 메시지 추가
+watch(selectedRepository, (newValue, oldValue) => {
+  if (newValue && newValue !== oldValue) {
+    const repoName = getRepositoryName(newValue);
+    chatMessages.value.push({
+      role: 'assistant',
+      content: `${repoName} 저장소를 선택하셨습니다. 이제 이 저장소의 코드 컨벤션과 개발 가이드에 대해 질문해보세요.`,
+    });
+
+    // 스크롤 아래로 이동
+    nextTick(() => {
+      scrollToBottom();
+    });
+  }
 });
 
-// 2. useCallback으로 함수 메모이제이션
-const memoizedCallback = useCallback(
-  () => {
-    doSomething(a, b);
-  },
-  [a, b],
-);
+onMounted(() => {
+  // 초기 메시지 추가
+  chatMessages.value.push({
+    role: 'assistant',
+    content:
+      '안녕하세요! 개발 가이드 봇입니다. 코드 컨벤션, 개발 방법론, 모범 사례 등에 대해 질문해보세요. 특정 저장소에 대한 가이드가 필요하시면 위에서 저장소를 선택해주세요.',
+  });
 
-// 3. useMemo로 계산 결과 메모이제이션
-const memoizedValue = useMemo(() => computeExpensiveValue(a, b), [a, b]);`
-    };
-  } else if (question.includes('가상화') || question.includes('virtualized')) {
-    return {
-      sender: 'bot',
-      text: 'react-window를 사용한 목록 가상화 구현 방법입니다:',
-      code: `import { FixedSizeList } from 'react-window';
-
-function VirtualizedList({ items }) {
-  const Row = ({ index, style }) => (
-    <div style={style}>
-      <Item data={items[index]} />
-    </div>
-  );
-
-  return (
-    <FixedSizeList
-      height={500}
-      width="100%"
-      itemCount={items.length}
-      itemSize={50}
-    >
-      {Row}
-    </FixedSizeList>
-  );
-}`
-    };
-  } else if (question.includes('시작') || question.includes('첫 단계')) {
-    return {
-      sender: 'bot',
-      text: '이 이슈를 해결하기 위한 첫 단계는 다음과 같습니다:<br><br>1. 현재 성능 문제를 정확히 측정하세요. React DevTools의 Profiler를 사용하여 어떤 컴포넌트가 자주 리렌더링되는지 확인하세요.<br>2. 대규모 목록을 렌더링하는 컴포넌트에 React.memo를 적용하여 불필요한 리렌더링을 방지하세요.<br>3. 목록 아이템 수가 많다면 react-window나 react-virtualized 같은 가상화 라이브러리 도입을 고려하세요.'
-    };
-  } else {
-    return {
-      sender: 'bot',
-      text: '질문에 대한 답변을 찾기 위해 저장소 코드를 분석했습니다. 이 문제는 주로 대규모 데이터셋을 효율적으로 렌더링하는 것과 관련이 있습니다. 최신 React 패턴과 최적화 기법을 적용하면 해결할 수 있습니다. 더 구체적인 질문이 있으시면 알려주세요.'
-    };
-  }
-}
-
-// 추천 질문 목록
-const suggestedQuestions = ref([
-  '이 이슈를 해결하기 위한 첫 단계는 무엇인가요?',
-  'React 컴포넌트 성능 최적화를 위한 방법을 알려주세요',
-  'react-window를 사용한 가상화 구현 예제가 있나요?',
-  '이 코드의 문제점은 무엇인가요?',
-  '이 이슈 해결에 필요한 기술 스택은 무엇인가요?',
-  '비슷한 문제를 해결한 사례가 있나요?'
-]);
-
-const logout = () => {
-  // 로그아웃 로직 구현
-  alert('로그아웃 기능이 구현될 예정입니다.');
-  profileDropdownOpen.value = false;
-};
+  // 스크롤 아래로 이동
+  nextTick(() => {
+    scrollToBottom();
+  });
+});
 </script>
